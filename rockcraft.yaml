@@ -1,0 +1,28 @@
+name: sriov-cni
+base: ubuntu@24.04
+version: '2.9.0'
+summary: SR-IOV CNI ROCK
+license: Apache-2.0
+description: |
+  Container image for the SR-IOV CNI K8s plugin.
+  https://github.com/k8snetworkplumbingwg/sriov-cni
+platforms:
+  amd64:
+
+services:
+  copy-sriov-cni-binary:
+    override: replace
+    startup: enabled
+    command: |
+      cp -f /usr/bin/sriov /host/opt/cni/bin/
+
+parts:
+  sriov-cni:
+    plugin: go
+    source: https://github.com/k8snetworkplumbingwg/sriov-cni.git
+    source-type: git
+    source-tag: v${CRAFT_PROJECT_VERSION}
+    build-snaps:
+      - go/1.23/stable
+    organize:
+      build/sriov: usr/bin
